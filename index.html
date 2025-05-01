@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>AI Chatbot</title>
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    #chatbox { width: 100%; height: 300px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; }
+    input, button { padding: 10px; width: 100%; margin-top: 5px; }
+  </style>
+</head>
+<body>
+  <h2>AI Assistant (GPT-4)</h2>
+  <div id="chatbox"></div>
+  <input type="text" id="userInput" placeholder="Ask something..." />
+  <button onclick="sendMessage()">Send</button>
+
+  <script>
+    const chatbox = document.getElementById('chatbox');
+  
+    async function sendMessage() {
+      const input = document.getElementById('userInput');
+      const message = input.value;
+      if (!message) return;
+  
+      chatbox.innerHTML += `<p><b>You:</b> ${message}</p>`;
+      input.value = '';
+  
+      const response = await fetch("http://localhost:3000/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: message })
+      });
+  
+      const data = await response.json();
+      chatbox.innerHTML += `<p><b>AI:</b> ${data.reply}</p>`;
+      chatbox.scrollTop = chatbox.scrollHeight;
+    }
+  </script>
+  
+</body>
+</html>
